@@ -3,7 +3,6 @@
 $(function() {
   var scannerInput="";
   var logs = null;
-
   Parse.$ = jQuery;
 
   // Initialize Parse with your Parse application javascript keys
@@ -30,17 +29,86 @@ $(function() {
 
   });
 
+   var UserInfoView = Parse.View.extend({
+    tagName:"li",
+    template: _.template($("#player-template").html()),
+    closedTemplate:_.template($('#closed-player-template').html()),
+    events:{
+      "click .toggle": "toggleView"
+    },
+    initialize:function()
+    {
+      _.bindAll(this, 'render', 'toggleView');
+      console.log(this.el);
+      this.open=false;
+      this.render();
+    },
+    render: function() {
+      if(this.open)
+      {
+        $(this.el).html(this.template(this.model.toJSON()));
+      }
+      else
+      {
+        $(this.el).html(this.closedTemplate(this.model.toJSON()));
+      }
+      return this;
+    },
+    toggleView:function()
+    {
+      console.log("button pressed");
+      this.open=!this.open;
+      this.render();
+    }
+  });
+
+  var UserInfo = Parse.Object.extend("UserInfo",{
+  });
+
+  var UserInfos = Parse.Collection.extend({
+    model:UserInfo
+  });
+
   var AdminPanelView = Parse.View.extend({
-    el: $("body"),
+    el: $("#app"),
     events: {
       "click .log-out": "logOut",
     },    
     initialize:function(){
+      var self=this;
+      //summon the logs
+      logs = new Logs;
+
+      var today=new Date();
+
+      logs.query = new Parse.Query(Log);
+      logs.query.equalTo("clubName", Parse.User.current().get("username").split("_")[0]);
+      logs.fetch({
+        success:function(result){
+          console.log("hey",this);
+          self.userInfos = new UserInfos;
+          self.userInfos.query = new Parse.Query(UserInfo);
+          self.userInfos.query.containedIn("cardId",(logs.pluck("cardId")));
+          console.log(logs.pluck("cardId"));
+          self.userInfos.fetch({
+            success:function(result){
+              console.log("'lo",result);
+              self.render();
+            }
+          });
+        }
+      });
       _.bindAll(this,'render');
-      this.render();
     },
     render:function(){
+      var self=this;
       this.$el.html(_.template($("#admin-template").html()));
+      this.$("#members").html("");
+      this.userInfos.each(function(userInfo){
+        console.log(userInfo);
+        var view = new UserInfoView({model: userInfo});
+        self.$("#members").append(view.render().el);
+      });
       this.delegateEvents();
     },
     logOut:function(){
@@ -51,6 +119,7 @@ $(function() {
     }
   });
 
+ 
 
   var ScanView = Parse.View.extend({
     el: $("body"),
@@ -73,6 +142,7 @@ $(function() {
 
       logs.query = new Parse.Query(Log);
       logs.query.equalTo("clubName", Parse.User.current().get("username"));
+      //all logs from the club, name got by stripping off the "_Admin" bit off
       logs.query.greaterThanOrEqualTo("date",today);
 
       logs.fetch({
@@ -80,9 +150,12 @@ $(function() {
           console.log("hi",result);
         }
       });
+
+
+      
     },
     render:function(){
-      this.$el.html(_.template($("#scan-template").html()));
+      this.$("#app").html(_.template($("#scan-template").html()));
       this.delegateEvents();
     },
     logOut:function(){
@@ -136,7 +209,7 @@ $(function() {
       "submit form.login-form": "logIn",
     },
 
-    el: "body",
+    el: "#app",
     
     initialize: function() {
       _.bindAll(this, "logIn");
