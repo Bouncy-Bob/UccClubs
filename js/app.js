@@ -114,6 +114,59 @@ $(function() {
         var view = new UserInfoView({model: userInfo});
         self.$("#members").append(view.render().el);
       });
+
+      //graph stuff
+      var data = [];
+      var intermediate = [];
+      var aMonthAgo = new Date();
+      aMonthAgo.setDate(aMonthAgo.getDate()-30);
+      aMonthAgo=Math.floor(aMonthAgo/(24*60*60*1000));
+      var graphLogs = logs.pluck("date");
+
+      for(var i=0;i<graphLogs.length;i++)
+      {
+        var roundedLog = Math.floor(graphLogs[i]/(24*60*60*1000));
+        var daysAgo = roundedLog - aMonthAgo;
+        if(daysAgo>=0)intermediate.push(daysAgo);
+      }
+
+      for(var i=0;i<intermediate.length;i++)
+      {
+        for(var j=0;j<i;j++)
+        {
+          if(intermediate[i]<intermediate[j])
+          {
+            var tmp=intermediate[i];
+            intermediate[i]=intermediate[j];
+            intermediate[j]=tmp;
+          }
+        }
+      }
+
+      for(var i=0;i<intermediate.length;i++)
+      {
+        var size = intermediate.filter(function(value) { return value == intermediate[i] }).length;
+        var inArray=false;
+        for(var j=0;j<data.length;j++)
+        {
+          if(data[j][0]==intermediate[i])
+          {
+            inArray=true;
+          }
+        }
+        if(!inArray)
+        {
+          data.push([intermediate[i],size]);
+        }
+      }
+
+      self.$("#graph").plot([data],{
+        series:{lines:{show:true},points:{show:true}},
+        xaxis:{show:false},
+        yaxis:{min:0,tickSize:1,tickDecimals:0}
+      });
+
+
       this.delegateEvents();
     },
     logOut:function(){

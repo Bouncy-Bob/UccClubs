@@ -18,6 +18,11 @@ button {
     appearance: none;
 }
 
+div#graph{
+    width:850px;
+    height:400px;
+}
+
 body {
     font: 14px 'Helvetica Neue', Helvetica, Arial, sans-serif;
     line-height: 1.4em;
@@ -301,6 +306,8 @@ nav ul {
     width: 280px;
     float: right;
 }
+
+
 
 
 
