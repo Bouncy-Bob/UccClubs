@@ -29,7 +29,8 @@ $(function() {
 
   });
 
-   var UserInfoView = Parse.View.extend({
+
+  var UserInfoView = Parse.View.extend({
     tagName:"li",
     template: _.template($("#player-template").html()),
     closedTemplate:_.template($('#closed-player-template').html()),
@@ -39,14 +40,22 @@ $(function() {
     initialize:function()
     {
       _.bindAll(this, 'render', 'toggleView');
-      console.log(this.el);
       this.open=false;
       this.render();
     },
     render: function() {
       if(this.open)
       {
-        $(this.el).html(this.template(this.model.toJSON()));
+        var json = this.model.toJSON();
+        var arrayToCount = logs.pluck("cardId");
+        var count=0;
+        for(var i=0;i<arrayToCount.length;i++)
+        {
+          if(json["cardId"]==arrayToCount[i])count++;
+        }
+        json["count"]=count;
+        console.log(count);
+        $(this.el).html(this.template(json));
       }
       else
       {
@@ -85,14 +94,11 @@ $(function() {
       logs.query.equalTo("clubName", Parse.User.current().get("username").split("_")[0]);
       logs.fetch({
         success:function(result){
-          console.log("hey",this);
           self.userInfos = new UserInfos;
           self.userInfos.query = new Parse.Query(UserInfo);
           self.userInfos.query.containedIn("cardId",(logs.pluck("cardId")));
-          console.log(logs.pluck("cardId"));
           self.userInfos.fetch({
             success:function(result){
-              console.log("'lo",result);
               self.render();
             }
           });
@@ -105,7 +111,6 @@ $(function() {
       this.$el.html(_.template($("#admin-template").html()));
       this.$("#members").html("");
       this.userInfos.each(function(userInfo){
-        console.log(userInfo);
         var view = new UserInfoView({model: userInfo});
         self.$("#members").append(view.render().el);
       });
@@ -145,14 +150,7 @@ $(function() {
       //all logs from the club, name got by stripping off the "_Admin" bit off
       logs.query.greaterThanOrEqualTo("date",today);
 
-      logs.fetch({
-        success:function(result){
-          console.log("hi",result);
-        }
-      });
-
-
-      
+      logs.fetch();
     },
     render:function(){
       this.$("#app").html(_.template($("#scan-template").html()));
@@ -166,7 +164,6 @@ $(function() {
     },
 
     processScan:function(event){ 
-      console.log("works");
        if(event.keyCode == 13)//enter were pressed
             {
               var cardId=(/^\d+$/.test(scannerInput))?(parseInt(scannerInput,10).toString(16)):"";
@@ -174,7 +171,6 @@ $(function() {
               scannerInput="";
               if(cardId=="")
               {
-                console.log("someone messed on the keyboard");
               }
               else
               {
@@ -188,7 +184,6 @@ $(function() {
                     cardId: cardId,
                     date: new Date()
                   });
-                  console.log(logs);
                 }
               }
               
