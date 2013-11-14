@@ -18,9 +18,9 @@ button {
     appearance: none;
 }
 
-div#graph{
-    width:850px;
-    height:400px;
+button:hover{
+    background-color: #8c99a4;
+    cursor: pointer;
 }
 
 body {
@@ -40,20 +40,22 @@ body {
 
 #app {
     background: #fff;
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0);
     margin: 130px 0 40px 0;
-    border: 1px solid #ccc;
+    border: none;
     position: relative;
     border-top-left-radius: 2px;
     border-top-right-radius: 2px;
-    box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.2),
-    0 25px 50px 0 rgba(0, 0, 0, 0.15);
+   /* box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.2),
+   0 25px 50px 0 rgba(0, 0, 0, 0.15);*/
+
+
 }
 
 #app:before {
     content: '';
-    border-left: 1px solid #f5d6d6;
-    border-right: 1px solid #f5d6d6;
+    border-left: none;
+    border-right: none;
     width: 2px;
     position: absolute;
     top: 45px;
@@ -78,7 +80,7 @@ body {
     font-size: 70px;
     font-weight: bold;
     text-align: center;
-    color: #888;
+    color: #fff;
     -webkit-text-rendering: optimizeLegibility;
     -moz-text-rendering: optimizeLegibility;
     -ms-text-rendering: optimizeLegibility;
@@ -90,7 +92,7 @@ body {
     border-radius: inherit;
     width: 60%;
     margin: 20px auto 0px auto;
-    }
+}
 
 #logo{
     margin:0 auto;
@@ -134,7 +136,7 @@ label[for='toggle-all'] {
 }
 
 .login {
-    width: 870px;
+    width: 890px;
     margin: 20px auto 25px auto;
     background-color: rgba(31, 137, 212);
     background: -webkit-gradient(linear, left top, left bottom, from(rgba(31, 137, 212, 0.8)),to(rgba(6, 72, 119, 0.9)));
@@ -146,8 +148,19 @@ label[for='toggle-all'] {
     filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#9d8b83', EndColorStr='#847670');
     border-radius: 20px;
     padding: 0 0 25px 0;
-    box-shadow: 5px 5px 15px #333
+    box-shadow: 5px 5px 15px #333;
+    overflow: auto;
+
     
+    
+}
+
+.transparent{
+ 
+}
+
+.scan{
+  margin-top: -100px;
 }
 
 nav{
@@ -176,53 +189,53 @@ nav ul {
     height: 40px;  
 }  
 
-    nav li {  
-        display: inline;  
-        float: left;  
-    }
+nav li {  
+    display: inline;  
+    float: left;  
+}
 
-    .clearfix:before,  
-    .clearfix:after {  
-        content: " ";  
-        display: table;  
-    }  
-    .clearfix:after {  
-        clear: both;  
-    }  
-    .clearfix {  
-        *zoom: 1;  
-    }
+.clearfix:before,  
+.clearfix:after {  
+    content: " ";  
+    display: table;  
+}  
+.clearfix:after {  
+    clear: both;  
+}  
+.clearfix {  
+    *zoom: 1;  
+}
 
-        nav a {  
-        color: #fff;  
-        display: inline-block;  
-        width: 100px;  
-        text-align: center;  
-        text-decoration: none;  
-        line-height: 50px;  
-        text-shadow: 1px 1px 0px #283744;  
-    } 
+nav a {  
+    color: #fff;  
+    display: inline-block;  
+    width: 100px;  
+    text-align: center;  
+    text-decoration: none;  
+    line-height: 50px;  
+    text-shadow: 1px 1px 0px #283744;  
+} 
 
-        nav li a {  
-        border-right: 1px solid #576979;  
-        box-sizing:border-box;  
-        -moz-box-sizing:border-box;  
-        -webkit-box-sizing:border-box;  
-    }  
-    nav li:last-child a {  
-        border-right: 0;  
-    }
+nav li a {  
+    border-right: 1px solid #576979;  
+    box-sizing:border-box;  
+    -moz-box-sizing:border-box;  
+    -webkit-box-sizing:border-box;  
+}  
+nav li:last-child a {  
+    border-right: 0;  
+}
 
-        nav a:hover, nav a:active {  
-        background-color: #8c99a4;  
-    }
+nav a:hover, nav a:active {  
+    background-color: #8c99a4;  
+}
 
-        nav a#pull {  
-        display: none;  
-    }                      
+nav a#pull {  
+    display: none;  
+}                      
 
 #skull{
-    margin: 20px auto;
+    margin: 20px auto 0 auto;
     display: block;
 }
 
@@ -236,19 +249,19 @@ nav ul {
 
 
 
-.login h2 {
+.login-form h2 {
     font-weight: normal;
     font-size: 25px;
     line-height: 1.2em;
     margin-bottom: 20px;
-    /*color: #fff;*/
+    color: #fff;
     text-align: center;
     margin-top: 50px;
     margin-left: 20px;
     margin-right: 20px;
 }
 
-.login input {
+.login-form input {
     display: block;
     margin: 0 auto 10px auto;
     font-size: 20px;
@@ -257,7 +270,7 @@ nav ul {
     border-radius: 10px;
 }
 
-.login button {
+.login-form button {
     padding: 5px 10px;
     background-color: #aa0f0d;
     background: -webkit-gradient(linear, left top, left bottom, from(rgba(170, 15, 13, 1)),to(rgba(116, 14, 12, 1)));
@@ -277,6 +290,8 @@ nav ul {
     font-family: "Helvetica Neue";
 }
 
+
+
 .login .error {
     border: 1px solid red;
     background: #FDEFF0;
@@ -287,8 +302,20 @@ nav ul {
 .ucc_logos{
     width: 870px;
     margin: 20px auto;
-    background-color: blue;
-     
+    background-color: rgba(31, 137, 212);
+    background: -webkit-gradient(linear, left top, left bottom, from(rgba(31, 137, 212, 0.8)),to(rgba(6, 72, 119, 0.9)));
+    background: -webkit-linear-gradient(top, rgba(31, 137, 212, 0.8), rgba(6, 72, 119, 0.9));
+    background: -moz-linear-gradient(top, rgba(31, 137, 212, 0.8), rgba(6, 72, 119, 0.9));
+    background: -o-linear-gradient(top, rgba(31, 137, 212, 0.8), rgba(6, 72, 119, 0.9));
+    background: -ms-linear-gradient(top, rgba(31, 137, 212, 0.8), rgba(6, 72, 119, 0.9));
+    background: linear-gradient(top, rgba(31, 137, 212, 0.8), rgba(6, 72, 119, 0.9));
+    filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#9d8b83', EndColorStr='#847670');
+    overflow: auto;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 5px 5px 15px #333;    
+    
+    
 }
 
 #ucc{
@@ -304,6 +331,7 @@ nav ul {
 
 #union{
     width: 280px;
+    height: 101px;
     float: right;
 }
 
@@ -314,109 +342,151 @@ nav ul {
 
 
 
+@media screen and (max-width: 871px) { 
 
-
-    @media screen and (max-width: 871px) { 
-
-        #logo{
-            width: 100%;
-        }
-
-         .login{
-            width: 100%;
-         }
-
-         .ucc_logos{
-            width: 300px;
-            margin: 20px auto;
-            background-color: blue;
-     
-         }
-
+    #logo{
+        width: 100%;
     }
 
-    @media screen and (max-width: 600px) { 
+    .login{
+        width: 100%;
+    }
+
+    .ucc_logos{
+        width: 300px;
+        margin: 20px auto;
+        background-color: blue;
+        
+        
+    }
+
+}
+
+@media screen and (max-width: 600px) { 
 
 
-        nav {   
-            height: auto;  
-        }  
-        nav ul {  
-            width: 100%;  
-            display: block;  
-            height: auto;  
-        }  
-        nav li {  
-            width: 50%;  
-            float: left;  
-            position: relative;  
-        }  
-        nav li a {  
-            border-bottom: 1px solid #576979;  
-            border-right: 1px solid #576979;  
-        }  
-        nav a {  
-            text-align: left;  
-            width: 100%;  
-            text-indent: 25px;  
-        }  
+    nav {   
+        height: auto;  
+    }  
+    nav ul {  
+        width: 100%;  
+        display: block;  
+        height: auto;  
+    }  
+    nav li {  
+        width: 50%;  
+        float: left;  
+        position: relative;  
+    }  
+    nav li a {  
+        border-bottom: 1px solid #576979;  
+        border-right: 1px solid #576979;  
+    }  
+    nav a {  
+        text-align: left;  
+        width: 100%;  
+        text-indent: 25px;  
+    }  
+}  
+
+@media only screen and (max-width : 480px) { 
+
+    #logo{
+        width: 100%;
+    } 
+    nav {  
+        border-bottom: 0;  
+    }  
+    nav ul {  
+        display: none;  
+        height: auto;  
+    }  
+    nav a#pull {  
+        display: block;  
+        background-color: #aa0f0d;
+        background: -webkit-gradient(linear, left top, left bottom, from(rgba(170, 15, 13, 1)),to(rgba(116, 14, 12, 1)));
+        background: -webkit-linear-gradient(top, rgba(170, 15, 13, 1), rgba(116, 14, 12, 1));
+        background: -moz-linear-gradient(top, rgba(170, 15, 13, 1), rgba(116, 14, 12, 1));
+        background: -o-linear-gradient(top, rgba(170, 15, 13, 1), rgba(116, 14, 12, 1));
+        background: -ms-linear-gradient(top, rgba(170, 15, 13, 1), rgba(116, 14, 12, 1));
+        background: linear-gradient(top, rgba(170, 15, 13, 1), rgba(116, 14, 12, 1));
+        filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#9d8b83', EndColorStr='#847670'); 
+        width: 100%;  
+        position: relative;  
+    }  
+    nav a#pull:after {  
+        content:"";  
+        background: url('../img/menu.png') no-repeat;  
+        width: 30px;  
+        height: 30px;  
+        display: inline-block;  
+        position: absolute;  
+        right: 15px;  
+        top: 10px;  
+
+    }  
+} 
+
+
+@media only screen and (max-width : 320px) {  
+    nav li {  
+        display: block;  
+        float: none;  
+        width: 100%;  
+    }  
+    nav li a {  
+        border-bottom: 1px solid #576979;  
+    }
+
+    .login button{
+        width: 95%
     }  
 
-        @media only screen and (max-width : 480px) { 
-
-        #logo{
-            width: 100%;
-        } 
-        nav {  
-            border-bottom: 0;  
-        }  
-        nav ul {  
-            display: none;  
-            height: auto;  
-        }  
-        nav a#pull {  
-            display: block;  
-            background-color: #aa0f0d;
-            background: -webkit-gradient(linear, left top, left bottom, from(rgba(170, 15, 13, 1)),to(rgba(116, 14, 12, 1)));
-            background: -webkit-linear-gradient(top, rgba(170, 15, 13, 1), rgba(116, 14, 12, 1));
-            background: -moz-linear-gradient(top, rgba(170, 15, 13, 1), rgba(116, 14, 12, 1));
-            background: -o-linear-gradient(top, rgba(170, 15, 13, 1), rgba(116, 14, 12, 1));
-            background: -ms-linear-gradient(top, rgba(170, 15, 13, 1), rgba(116, 14, 12, 1));
-            background: linear-gradient(top, rgba(170, 15, 13, 1), rgba(116, 14, 12, 1));
-            filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#9d8b83', EndColorStr='#847670'); 
-            width: 100%;  
-            position: relative;  
-        }  
-        nav a#pull:after {  
-            content:"";  
-            background: url('../img/menu.png') no-repeat;  
-            width: 30px;  
-            height: 30px;  
-            display: inline-block;  
-            position: absolute;  
-            right: 15px;  
-            top: 10px;  
-
-        }  
-    } 
+    .login input{
+        width: 90%
+    }  
+}
 
 
-        @media only screen and (max-width : 320px) {  
-        nav li {  
-            display: block;  
-            float: none;  
-            width: 100%;  
-        }  
-        nav li a {  
-            border-bottom: 1px solid #576979;  
-        }
 
-        .login button{
-            width: 95%
-        }  
 
-        .login input{
-            width: 90%
-        }  
-    }   
+
+.scan h2{
+    font-weight: normal;
+    font-size: 25px;
+    line-height: 1.2em;
+    margin-bottom: 20px;
+    color: #fff;
+    text-align: center;
+    margin-top: 50px;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.scan button{
+ padding: 5px 10px;
+ background-color: #aa0f0d;
+ background: -webkit-gradient(linear, left top, left bottom, from(rgba(170, 15, 13, 1)),to(rgba(116, 14, 12, 1)));
+ background: -webkit-linear-gradient(top, rgba(170, 15, 13, 1), rgba(116, 14, 12, 1));
+ background: -moz-linear-gradient(top, rgba(170, 15, 13, 1), rgba(116, 14, 12, 1));
+ background: -o-linear-gradient(top, rgba(170, 15, 13, 1), rgba(116, 14, 12, 1));
+ background: -ms-linear-gradient(top, rgba(170, 15, 13, 1), rgba(116, 14, 12, 1));
+ background: linear-gradient(top, rgba(170, 15, 13, 1), rgba(116, 14, 12, 1));
+ filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#9d8b83', EndColorStr='#847670');
+ color: #fff;
+ font-size: 20px;
+ border: 1px solid #ccc;
+ border-radius: 5px;
+ margin: 0 auto 25px auto;
+ width: 310px;
+ display: block;
+ font-family: "Helvetica Neue"; 
+}   
+
+
+#skull_small{
+    width: 100px;
+    float: right;
+    margin: 20px 20px;
+}
 
