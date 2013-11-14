@@ -3,6 +3,7 @@
 $(function() {
   var scannerInput="";
   var logs = null;
+  var user;
   Parse.$ = jQuery;
 
   // Initialize Parse with your Parse application javascript keys
@@ -94,26 +95,27 @@ $(function() {
       logs.query.equalTo("clubName", Parse.User.current().get("username").split("_")[0]);
       logs.fetch({
         success:function(result){
-          self.userInfos = new UserInfos;
+          /*self.userInfos = new UserInfos;
           self.userInfos.query = new Parse.Query(UserInfo);
           self.userInfos.query.containedIn("cardId",(logs.pluck("cardId")));
           self.userInfos.fetch({
             success:function(result){
               self.render();
             }
-          });
+          });*/
         }
       });
+    self.render();
       _.bindAll(this,'render');
     },
     render:function(){
       var self=this;
       this.$el.html(_.template($("#admin-template").html()));
-      this.$("#members").html("");
+      /*this.$("#members").html("");
       this.userInfos.each(function(userInfo){
         var view = new UserInfoView({model: userInfo});
         self.$("#members").append(view.render().el);
-      });
+      });*/
 
       //graph stuff
       var data = [];
@@ -182,7 +184,7 @@ $(function() {
   var ScanView = Parse.View.extend({
     el: $("body"),
     events: {
-      "click .log-out": "logOut",
+      "click .go-back": "goBack",
       "keypress": "processScan",
     },    
     initialize:function(){
@@ -199,7 +201,7 @@ $(function() {
       today.setSeconds(0);
 
       logs.query = new Parse.Query(Log);
-      logs.query.equalTo("clubName", Parse.User.current().get("username"));
+      logs.query.equalTo("clubName", user);
       //all logs from the club, name got by stripping off the "_Admin" bit off
       logs.query.greaterThanOrEqualTo("date",today);
 
@@ -209,8 +211,7 @@ $(function() {
       this.$("#app").html(_.template($("#scan-template").html()));
       this.delegateEvents();
     },
-    logOut:function(){
-      Parse.User.logOut();
+    goBack:function(){
       new LogInView();
       this.undelegateEvents();
       delete self;
@@ -233,7 +234,7 @@ $(function() {
                 {
                   logs.create(
                   {
-                    clubName: Parse.User.current().get("username"),
+                    clubName: user,
                     cardId: cardId,
                     date: new Date()
                   });
@@ -255,6 +256,7 @@ $(function() {
   var LogInView = Parse.View.extend({
     events: {
       "submit form.login-form": "logIn",
+      "change #club": "goToScan"
     },
 
     el: "#app",
@@ -271,14 +273,7 @@ $(function() {
       
       Parse.User.logIn(username, password, {
         success: function(user) {
-          if(user.get("admin"))
-        {
           new AdminPanelView();
-        }
-        else
-        {
-          new ScanView();
-        }
           self.undelegateEvents();
           delete self;
         },
@@ -292,6 +287,13 @@ $(function() {
       this.$(".login-form button").attr("disabled", "disabled");
 
       return false;
+    },
+
+    goToScan:function()
+    {
+      new ScanView();
+      this.undelegateEvents();
+      delete this;
     },
 
     render: function() {
@@ -311,15 +313,9 @@ $(function() {
     },
 
     render: function() {
-      if (Parse.User.current()) {
-        if(Parse.User.current().get("admin"))
-        {
-          new AdminPanelView();
-        }
-        else
-        {
-          new ScanView();
-        }
+      if (Parse.User.current()) 
+      {
+        new AdminPanelView();
       } else {
         new LogInView();
       }

@@ -12,31 +12,27 @@
   </head>
 
   <body>
-<header id="header">
+<body>
+  <header id="header">
 
-      <img id="logo" src="img/icons_club.png"/>
+    <img id="logo" src="img/icons_club.png"/>
 
-      </header>      
-      <div class="login">
-      
-       <nav class="clearfix">  
-        <ul class="clearfix">  
-            <li><a href="#">Home</a></li>  
-            <li><a href="#">Message</a></li>  
-            <li><a href="#">Events</a></li>  
-            <li><a href="#">Finance</a></li>  
-            <li><a href="#">Press</a></li>  
-            <li><a href="#">Contact</a></li>    
-        </ul>  
-        <a href="#" id="pull">Menu</a>  
-       </nav>  
-      
-       
-      <img id="skull" src="img/icon_skull.png"/>
+  </header>      
+  <div class="login">
 
-      <div class="big">
+   <nav class="clearfix">  
+    <ul class="clearfix">  
+      <li><a href="#">Home</a></li>  
+      <li><a href="#">Message</a></li>  
+      <li><a href="#">Events</a></li>  
+      <li><a href="#">Finance</a></li>  
+      <li><a href="#">Press</a></li>  
+      <li><a href="#">Contact</a></li>    
+    </ul>  
+    <a href="#" id="pull">Menu</a>  
+  </nav>  
 
-      <h1>Welcome</h1> 
+  <img id="skull" src="img/icon_skull.png"/>
     <!-- App Interface -->
 
     <div id="app">
@@ -45,6 +41,18 @@
     <!-- Templates -->
 
     <script type="text/template" id="login-template">
+      <form id="club_options">
+        <select id="club">
+          <option value="Select a club">Select a club</option>
+          <option value="rowing">Rowing</option>
+          <option value="Gaa">Gaa</option>
+          <option value="swimming">Swimming</option>
+          <option value="Athletics">Athletics</option>
+          <option value="Chess">Chess</option>
+          <option value="Canoe">Canoe</option>
+          <option value="Volleyball">Volleyball</option>
+        </select> 
+      </form> 
       <div>
         <form class="login-form">
           <h2>Please sign in with your clubs username/password</h2>
@@ -92,20 +100,67 @@
       <div class="scan">
         <h2>Please scan your card to sign in for your training</h2>
         <div id="messages"></div>
-        <button class="log-out">Log out</button>
+        <button class="go-back">Go Back</button>
       </div>
     </script>
 
      <script type="text/template" id="admin-template">
       <header id="header"></header>
-      
-      <div class="scan">
-        <h2>Welcome to the admin panel!</h2>
-      </div>
-      <div id="graph"></div>
-      <div id = "members"></div>
-      <button class="log-out">Log out</button>
-    </script>
+<div class="scan">
+
+<form id="search_options">
+
+<select id="club">
+<option value="Select a club">Select a club</option>
+<option value="rowing">Rowing</option>
+<option value="Gaa">Gaa</option>
+<option value="swimming">Swimming</option>
+<option value="Athletics">Athletics</option>
+<option value="Chess">Chess</option>
+<option value="Canoe">Canoe</option>
+<option value="Volleyball">Volleyball</option>
+</select> 
+
+<input id="search_box" type="search" placeholder=" Type a surname or part of a surname">
+<button id="search_button">Search Members</button>
+<button id="filter_button">Filter</button>
+</form> 
+
+<div id="members_list">
+<header id="titles">
+
+<h3 class="name">Name</h3>
+<h3 class="number">Student No.</h3>
+<h3 class="code">Course Code</h3>
+
+</header>
+
+<ul class="clearfix">  
+<li><a href="exec.html"><p class="left">Barry Brent</p><p class="center">19364587</p><p class="righty">CK101</p></a></li>  
+<li><a href="exec.html"><p class="left">Tomas Byrne</p><p class="center">19364587</p><p class="righty">CK101</p></a></li>   
+<li><a href="exec.html"><p class="left">Elaine Byrne</p><p class="center">19364587</p><p class="righty">CK101</p></a></li>  
+<li><a href="exec.html"><p class="left">Ben Connor</p><p class="center">19364587</p><p class="righty">CK101</p></a></li>  
+<li><a href="exec.html"><p class="left">Micheal Corcoran</p><p class="center">19364587</p><p class="righty">CK101</p></a></li>   
+<li><a href="exec.html"><p class="left">Jennifer Dean</p><p class="center">19364587</p><p class="righty">CK101</p></a></li>
+<li><a href="exec.html"><p class="left">Sarah Denver</p><p class="center">19364587</p><p class="righty">CK101</p></a></li>  
+<li><a href="exec.html"><p class="left">James Farley</p><p class="center">19364587</p><p class="righty">CK101</p></a></li>   
+<li><a href="exec.html"><p class="left">Mary Geoghan</p><p class="center">19364587</p><p class="righty">CK101</p></a></li>  
+<li><a href="exec.html"><p class="left">Daniel Kirwan</p><p class="center">19364587</p><p class="righty">CK101</p></a></li>  
+<li><a href="exec.html"><p class="left">Barry Meehan</p><p class="center">19364587</p><p class="righty">CK101</p></a></li>   
+<li><a href="exec.html"><p class="left">Dean Nagal</p><p class="center">19364587</p><p class="righty">CK101</p></a></li>
+<li><a href="exec.html"><p class="left">Jane Radison</p><p class="center">19364587</p><p class="righty">CK101</p></a></li>   
+<li><a href="exec.html"><p class="left">Sam Saunders</p><p class="center">19364587</p><p class="righty">CK101</p></a></li>
+</ul>  
+
+
+
+
+</div>
+
+<button class="log-out">Log Out</button>
+</div>
+<div id = "members"></div>
+</script>
     
     
 
