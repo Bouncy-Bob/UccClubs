@@ -95,14 +95,14 @@ $(function() {
       logs.query.equalTo("clubName", Parse.User.current().get("username").split("_")[0]);
       logs.fetch({
         success:function(result){
-          /*self.userInfos = new UserInfos;
+          self.userInfos = new UserInfos;
           self.userInfos.query = new Parse.Query(UserInfo);
           self.userInfos.query.containedIn("cardId",(logs.pluck("cardId")));
           self.userInfos.fetch({
             success:function(result){
               self.render();
             }
-          });*/
+          });
         }
       });
     self.render();
@@ -111,11 +111,11 @@ $(function() {
     render:function(){
       var self=this;
       this.$el.html(_.template($("#admin-template").html()));
-      /*this.$("#members").html("");
+      this.$("#members").html("");
       this.userInfos.each(function(userInfo){
         var view = new UserInfoView({model: userInfo});
         self.$("#members").append(view.render().el);
-      });*/
+      });
 
       //graph stuff
       var data = [];

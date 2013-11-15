@@ -153,8 +153,7 @@
 </ul>  
 
 
-
-
+<div id="members"></div>
 </div>
 
 <button class="log-out">Log Out</button>
@@ -167,6 +166,7 @@
 
     <script type="text/template" id="player-template">
       <div class="player">
+        <!-- uncomment this if you want, mainly left to show how to get the info in here
         <h3><%= name %></h3>
         <ul>
           <li>In Year <%= year %> of <%= degree %> </li>
@@ -174,8 +174,9 @@
           <li>Phone: <%= phone %> </li>
           <li>Has attended a session <%= count==1? 'once': count+' times' %></li>
         </ul>
+        -->
         <button class = "toggle">Hide Player Info</button>
-      </div>
+      </div> 
     </script>
     
      <script type="text/template" id="closed-player-template">
