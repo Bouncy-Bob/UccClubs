@@ -326,6 +326,7 @@ $(function() {
     goToScan:function()
     {
       new ScanView();
+      user = $("#club option:selected").text();
       this.undelegateEvents();
       delete this;
     },
