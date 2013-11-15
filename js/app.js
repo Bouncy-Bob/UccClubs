@@ -30,6 +30,24 @@ $(function() {
 
   });
 
+  var LogView = Parse.View.extend({
+    tagName:"li",
+    template: _.template($("#log-template").html()),
+
+    initialize:function()
+    {
+      _.bindAll(this, 'render');
+      this.render();
+    },
+    render: function() {
+      
+      var json = this.model.toJSON();
+      json["date"]=json["date"].iso;
+      $(this.el).html(this.template(json));
+      return this;
+    }
+  });
+
 
   var UserInfoView = Parse.View.extend({
     tagName:"li",
@@ -105,7 +123,6 @@ $(function() {
           });
         }
       });
-    self.render();
       _.bindAll(this,'render');
     },
     render:function(){
@@ -115,6 +132,23 @@ $(function() {
       this.userInfos.each(function(userInfo){
         var view = new UserInfoView({model: userInfo});
         self.$("#members").append(view.render().el);
+      });
+
+      //log view stuff
+
+      logs.each(function(log){
+        var cardIds = self.userInfos.pluck("cardId");
+        var names = self.userInfos.pluck("name");
+        for(var i=0;i<cardIds.length;i++)
+        {
+          if(log.get("cardId")==cardIds[i])
+          {
+            log.set("name",names[i]);
+            break;
+          }
+        }
+        var view = new LogView({model:log});
+        self.$("#logs").append(view.render().el);
       });
 
       //graph stuff
