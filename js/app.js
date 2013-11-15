@@ -222,6 +222,7 @@ $(function() {
       "keypress": "processScan",
     },    
     initialize:function(){
+      user="hurling";
       _.bindAll(this,'render');
       this.render();
 
@@ -290,7 +291,6 @@ $(function() {
   var LogInView = Parse.View.extend({
     events: {
       "submit form.login-form": "logIn",
-      "change #club": "goToScan"
     },
 
     el: "#app",
@@ -323,14 +323,6 @@ $(function() {
       return false;
     },
 
-    goToScan:function()
-    {
-      new ScanView();
-      user = $("#club option:selected").text();
-      this.undelegateEvents();
-      delete this;
-    },
-
     render: function() {
       this.$el.html(_.template($("#login-template").html()));
       this.delegateEvents();
@@ -352,7 +344,7 @@ $(function() {
       {
         new AdminPanelView();
       } else {
-        new LogInView();
+        new ScanView();
       }
     }
   });
