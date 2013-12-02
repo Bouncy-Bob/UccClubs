@@ -1,14 +1,11 @@
 
 
 $(function() {
-  var scannerInput="";
-  var logs = null;
   var user;
   Parse.$ = jQuery;
 
   // Initialize Parse with your Parse application javascript keys
-  Parse.initialize("qZdryhcPeunhMLO1dlVYYtV0Vohnqg1L9jLwLGAe",
-                   "z5qa1zlwK0eN468e1vxbkvvaHScxbqeX9myRC9pH");
+  Parse.initialize("ycnTm4Y7C3phZ23SRk7lRRGuOp7PWi83VFKXfew5", "ZfUcjY4ffqQOzZ2LKn2QbWMgAemUqnmOKjJeoihD");
 
   var AppState = Parse.Object.extend("AppState", {
       defaults: {
@@ -16,276 +13,87 @@ $(function() {
       }
   });
 
-  var Log = Parse.Object.extend("Logs",{
-    initialize:function(){
-
-    }
-  });
-
-  var Logs = Parse.Collection.extend({
-    model:Log,
-    initialize:function(){
-
+  var StartView = Parse.View.extend({
+    events: {
+      "click #button-login": "goToLogin",
+      "click #button-reg": "goToRegister"
     },
 
-  });
-
-  var LogView = Parse.View.extend({
-    tagName:"li",
-    template: _.template($("#log-template").html()),
-
-    initialize:function()
-    {
-      _.bindAll(this, 'render');
+    el: "#app",
+    
+    initialize: function() {
+      _.bindAll(this, "goToLogin","goToRegister");
       this.render();
     },
-    render: function() {
+
+    goToLogin: function(e) {
+          new LogInView();
+          self.undelegateEvents();
+          delete self;
+    },
+
+    goToRegister: function(e) {
+          new RegisterView();
+          self.undelegateEvents();
+          delete self;
+    },
       
-      var json = this.model.toJSON();
-      json["date"]=json["date"].iso;
-      $(this.el).html(this.template(json));
-      return this;
+    render: function() {
+      this.$el.html(_.template($("#start-template").html()));
+      this.delegateEvents();
     }
   });
 
+  var RegisterView = Parse.View.extend({
+    events: {
+      "submit .register-form": "register"
+    },
 
-  var UserInfoView = Parse.View.extend({
-    tagName:"li",
-    template: _.template($("#player-template").html()),
-    closedTemplate:_.template($('#closed-player-template').html()),
-    events:{
-      "click .toggle": "toggleView"
-    },
-    initialize:function()
-    {
-      _.bindAll(this, 'render', 'toggleView');
-      this.open=false;
+    el: "#app",
+    
+    initialize: function() {
+      _.bindAll(this, "register");
       this.render();
+      console.log($(".register-form"));
     },
-    render: function() {
-      if(this.open)
+
+    register: function(e) {
+      var self = this,
+          over18=Date.parse(this.$("#reg-date").val())<=(new Date().setDate(new Date().getYear()-18)),
+          user=new Parse.User({
+            username:this.$("#reg-username").val(),
+            password:this.$("#reg-password").val(),
+            email:this.$("#reg-email").val(),
+            friends:new Array()
+          });
+
+      alert(this.$("#reg-date").val());
+      if(!over18)
       {
-        var json = this.model.toJSON();
-        var arrayToCount = logs.pluck("cardId");
-        var count=0;
-        for(var i=0;i<arrayToCount.length;i++)
-        {
-          if(json["cardId"]==arrayToCount[i])count++;
-        }
-        json["count"]=count;
-        console.log(count);
-        $(this.el).html(this.template(json));
+        this.$(".error").val("You must be over 18. Sorry!");
       }
       else
-      {
-        $(this.el).html(this.closedTemplate(this.model.toJSON()));
+      { 
+        user.signUp(null,{
+          success:function(u){
+
+            new MenuView();
+            self.undelegateEvents();
+            delete self;
+          },
+          error:function(u,e){
+            this.$("#error").val(e.message);
+            this.$("#error").css('display','inline');
+          }
+        });
       }
-      return this;
+      return false;
     },
-    toggleView:function()
-    {
-      console.log("button pressed");
-      this.open=!this.open;
-      this.render();
-    }
-  });
 
-  var UserInfo = Parse.Object.extend("UserInfo",{
-  });
-
-  var UserInfos = Parse.Collection.extend({
-    model:UserInfo
-  });
-
-  var AdminPanelView = Parse.View.extend({
-    el: $("#app"),
-    events: {
-      "click .log-out": "logOut",
-    },    
-    initialize:function(){
-      var self=this;
-      //summon the logs
-      logs = new Logs;
-
-      var today=new Date();
-
-      logs.query = new Parse.Query(Log);
-      logs.query.equalTo("clubName", Parse.User.current().get("username").split("_")[0]);
-      logs.fetch({
-        success:function(result){
-          self.userInfos = new UserInfos;
-          self.userInfos.query = new Parse.Query(UserInfo);
-          self.userInfos.query.containedIn("cardId",(logs.pluck("cardId")));
-          self.userInfos.fetch({
-            success:function(result){
-              self.render();
-            }
-          });
-        }
-      });
-      _.bindAll(this,'render');
-    },
-    render:function(){
-      var self=this;
-      this.$el.html(_.template($("#admin-template").html()));
-      this.$("#members").html("");
-      this.userInfos.each(function(userInfo){
-        var view = new UserInfoView({model: userInfo});
-        self.$("#members").append(view.render().el);
-      });
-
-      //log view stuff
-
-      logs.each(function(log){
-        var cardIds = self.userInfos.pluck("cardId");
-        var names = self.userInfos.pluck("name");
-        for(var i=0;i<cardIds.length;i++)
-        {
-          if(log.get("cardId")==cardIds[i])
-          {
-            log.set("name",names[i]);
-            break;
-          }
-        }
-        var view = new LogView({model:log});
-        self.$("#logs").append(view.render().el);
-      });
-
-      //graph stuff
-      var data = [];
-      var intermediate = [];
-      var aMonthAgo = new Date();
-      aMonthAgo.setDate(aMonthAgo.getDate()-30);
-      aMonthAgo=Math.floor(aMonthAgo/(24*60*60*1000));
-      var graphLogs = logs.pluck("date");
-
-      for(var i=0;i<graphLogs.length;i++)
-      {
-        var roundedLog = Math.floor(graphLogs[i]/(24*60*60*1000));
-        var daysAgo = roundedLog - aMonthAgo;
-        if(daysAgo>=0)intermediate.push(daysAgo);
-      }
-
-      for(var i=0;i<intermediate.length;i++)
-      {
-        for(var j=0;j<i;j++)
-        {
-          if(intermediate[i]<intermediate[j])
-          {
-            var tmp=intermediate[i];
-            intermediate[i]=intermediate[j];
-            intermediate[j]=tmp;
-          }
-        }
-      }
-
-      for(var i=0;i<intermediate.length;i++)
-      {
-        var size = intermediate.filter(function(value) { return value == intermediate[i] }).length;
-        var inArray=false;
-        for(var j=0;j<data.length;j++)
-        {
-          if(data[j][0]==intermediate[i])
-          {
-            inArray=true;
-          }
-        }
-        if(!inArray)
-        {
-          data.push([intermediate[i],size]);
-        }
-      }
-
-      self.$("#graph").plot([data],{
-        series:{lines:{show:true},points:{show:true}},
-        xaxis:{show:false},
-        yaxis:{min:0,tickSize:1,tickDecimals:0}
-      });
-
-
+    render: function() {
+      this.$el.html(_.template($("#register-template").html()));
       this.delegateEvents();
-    },
-    logOut:function(){
-      Parse.User.logOut();
-      new LogInView();
-      this.undelegateEvents();
-      delete self;
     }
-  });
-
- 
-
-  var ScanView = Parse.View.extend({
-    el: $("body"),
-    events: {
-      "click .go-back": "goBack",
-      "keypress": "processScan",
-    },    
-    initialize:function(){
-      user="hurling";
-      _.bindAll(this,'render');
-      this.render();
-
-      //summon the logs for today
-      //assumption: a person will sign in once per day per club at most
-      logs = new Logs;
-
-      var today=new Date();
-      today.setHours(0);
-      today.setMinutes(0);
-      today.setSeconds(0);
-
-      logs.query = new Parse.Query(Log);
-      logs.query.equalTo("clubName", user);
-      //all logs from the club, name got by stripping off the "_Admin" bit off
-      logs.query.greaterThanOrEqualTo("date",today);
-
-      logs.fetch();
-    },
-    render:function(){
-      this.$("#app").html(_.template($("#scan-template").html()));
-      this.delegateEvents();
-    },
-    goBack:function(){
-      new LogInView();
-      this.undelegateEvents();
-      delete self;
-    },
-
-    processScan:function(event){ 
-       if(event.keyCode == 13)//enter were pressed
-            {
-              var cardId=(/^\d+$/.test(scannerInput))?(parseInt(scannerInput,10).toString(16)):"";
-                //little test to make sure a not-number didn't get into the scanner input somehow
-              scannerInput="";
-              if(cardId=="")
-              {
-              }
-              else
-              {
-                console.log("SCANNER:\tlogged card hex ID "+cardId);
-                //now we add the card to our collection
-                if($.inArray(cardId,logs.pluck("cardId"))<0)
-                {
-                  logs.create(
-                  {
-                    clubName: user,
-                    cardId: cardId,
-                    date: new Date()
-                  });
-                }
-              }
-              
-            }
-      else{
-        if(event.keyCode>=48&&event.keyCode<58)scannerInput+=((event.keyCode)-48).toString();
-          //if a decimal number, append to code
-        else scannerInput="";
-          //someone's planking on keyboard
-        if(scannerInput.length>10)scannerInput=scannerInput.substring(scannerInput.length-10);
-          //truncate to 10 digits, seems to be the hard number the scanners output
-      }
-    },
   });
 
   var LogInView = Parse.View.extend({
@@ -294,6 +102,11 @@ $(function() {
     },
 
     el: "#app",
+
+    render: function() {
+      this.$el.html(_.template($("#login-template").html()));
+      this.delegateEvents();
+    },
     
     initialize: function() {
       _.bindAll(this, "logIn");
@@ -307,7 +120,7 @@ $(function() {
       
       Parse.User.logIn(username, password, {
         success: function(user) {
-          new AdminPanelView();
+          new MenuView();
           self.undelegateEvents();
           delete self;
         },
@@ -321,15 +134,118 @@ $(function() {
       this.$(".login-form button").attr("disabled", "disabled");
 
       return false;
-    },
-
-    render: function() {
-      this.$el.html(_.template($("#login-template").html()));
-      this.delegateEvents();
     }
   });
 
-  // The main view for the app
+  var MenuView = Parse.View.extend({
+    events: {
+      "click #menu-buddies": "showBuddies",
+      "click #menu-buds": "buds",
+      "click #menu-redeem": "redeem",
+      "click #menu-king": "kingOfBeers"
+    },
+
+    el: "#app",
+
+    render: function() {
+      this.$el.html(_.template($("#menu-template").html()));
+      this.delegateEvents();
+    },
+    
+    initialize: function() {
+      _.bindAll(this, "showBuddies","buds","redeem","kingOfBeers");
+      this.render();
+    },
+
+    showBuddies:function(){
+      new BuddiesView();
+      self.undelegateEvents();
+      delete self;
+    },
+
+    buds:function(){
+      alert("what does this do");
+      //what does this do
+    },
+
+    redeem:function(){
+      alert("what does this do");
+      //might want to be a bit more specific to how this works
+      //like does a popup happen or what
+    },
+
+    kingOfBeers:function(){
+      alert("what does this do");
+      //what the fuck is this
+      //no seriously
+    }
+  });
+
+  var BuddiesView = Parse.View.extend({
+    events: {
+        "click #back":"back"
+    },
+
+    el: "#app",
+
+    render: function() {
+      this.$el.html(_.template($("#buddies-template").html()));
+      this.delegateEvents();
+    },
+    
+    initialize: function() {
+      var self=this;
+      Parse.User.current().fetch({
+        success:function(current){
+          self.buddies = new BuddyList;
+          self.buddies.query=new Parse.Query(Buddy);
+          self.buddies.query.containedIn("username",current.get("friends"));
+          console.log(current.get("friends"))
+          self.buddies.fetch({
+            success:function(buddies){
+              console.log(buddies);
+              buddies.each(function(buddy){
+                var view = new BuddyView({model:buddy});
+                self.$("#buddies-list").append(view.render().el);
+              });
+            }
+          });
+          self.render();
+        }
+      });
+      _.bindAll(this, "back");
+      
+    },
+    back:function(){
+      new MenuView;
+      this.undelegateEvents();
+      delete this;
+    }
+  });
+
+  var BuddyList=Parse.Collection.extend({});
+
+  var Buddy=Parse.User.extend({});
+
+  var BuddyView = Parse.View.extend({
+    tagName:  "li",
+
+    // Cache the template function for a single item.
+    template: _.template($('#buddy-template').html()),
+
+    // The DOM events specific to an item.
+    events: {},
+
+    initialize: function() {
+      _.bindAll(this);
+    },
+
+    render: function() {
+      $(this.el).html(this.template(this.model.toJSON()));
+      return this;
+    },
+  });
+
   var AppView = Parse.View.extend({
     // Instead of generating a new element, bind to the existing skeleton of
     // the App already present in the HTML.
@@ -342,9 +258,9 @@ $(function() {
     render: function() {
       if (Parse.User.current()) 
       {
-        new AdminPanelView();
+        new MenuView();
       } else {
-        new ScanView();
+        new StartView();
       }
     }
   });
