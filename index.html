@@ -46,7 +46,10 @@
         <button id="menu-buddies">Buddies</button>
         <button id="menu-buds">Buds</button>
         <button id="menu-redeem">Redeem</button>
-        <button id="menu-king">King of beers</button> 
+        <button id="menu-king">King of beers</button>
+        <button id="log-out">Log out</button>
+        <!-- Debug buttons -->
+        <button id="debug-addBud">Add a bud</button> 
     </script>
 
     <script type="text/template" id="buddies-template">
@@ -57,6 +60,33 @@
     <script type="text/template" id="buddy-template">
         <button><%=username%></button>
     </script>
+
+    <script type="text/template" id="buds-template">
+        <h2> You have <%= charity %> charity bud<%= charity==1?'':'s' %> and <%= free %> free bud<%= free==1?'':'s' %>!</h2>
+        <%= charity+free >0?'<input type="text" id="sendTo" placeholder="send to.." /> <input type="text" id="mess" placeholder="Send a message.." /><button id="send">Send a bud</button>':'' %>
+        <%= free >0?'<button id="acquire">Redeem a bud</button>':'' %>
+        <ul id="buds-sent"></ul>
+        <ul id="buds-received"></ul>
+        <ul id="buds-redeemed"></ul>
+        <button id="back">back</button>
+    </script>
+
+     <script type="text/template" id="bud-template">
+        <h2><%= from == null ? 'no one':from %> sent a bud to <%= to %></h2>
+        <p> <%= message %> </p>
+    </script>
+
+    <script type="text/template" id="kings-template">
+        <ul id="kings"></ul>
+       
+        <button id="back">back</button>
+    </script>
+
+    <script type="text/template" id="king-template">
+        <div class="king"><%=username%> has <%=buds%> bud<%=buds==1?'':'s'%>!</div>
+       
+    </script>
+
   </body>
 
 </html>
