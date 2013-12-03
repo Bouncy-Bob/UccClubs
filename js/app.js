@@ -28,13 +28,11 @@ $(function() {
 
     goToLogin: function(e) {
           new LogInView();
-          self.undelegateEvents();
           delete self;
     },
 
     goToRegister: function(e) {
           new RegisterView();
-          self.undelegateEvents();
           delete self;
     },
       
